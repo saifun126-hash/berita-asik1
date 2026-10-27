@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kuis Detektif Berita</title>
+<style>
+:root{--bg:#46178f;--bg2:#5a2aa8;--ink:#ffffff;--panel:#ffffff;--pink:#1f1f2e;--c0:#e21b3c;--c1:#1368ce;--c2:#b98200;--c3:#26890c;--gold:#ffd23f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#2e0f5e;--bg2:#431a82}}
+:root[data-theme="dark"]{--bg:#2e0f5e;--bg2:#431a82}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+#app{max-width:920px;margin:0 auto;padding:20px 16px 32px}
+[hidden]{display:none!important}
+h1{font-size:clamp(34px,7vw,56px);margin:8px 0;line-height:1.05;text-align:center}
+.sub{text-align:center;opacity:.9;margin:0 0 20px;font-size:18px}
+.card{background:var(--panel);color:var(--pink);border-radius:16px;padding:20px;box-shadow:0 6px 0 rgba(0,0,0,.25)}
+input{width:100%;box-sizing:border-box;font-size:20px;padding:14px;border-radius:10px;border:3px solid #ddd;margin:8px 0 14px}
+.modes{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.btn{font:inherit;font-weight:700;font-size:18px;border:0;border-radius:12px;padding:16px;color:#fff;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.3)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.m-all{background:#46178f}.m-m{background:var(--c3)}.m-s{background:var(--c2)}.m-h{background:var(--c0)}
+.top{display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:10px;gap:8px;flex-wrap:wrap}
+.pill{background:rgba(0,0,0,.28);border-radius:99px;padding:6px 14px}
+.bar{height:14px;border-radius:99px;background:rgba(0,0,0,.3);overflow:hidden;margin-bottom:14px}
+#fill{height:100%;width:100%;background:var(--gold)}
+.qbox{background:var(--panel);color:var(--pink);border-radius:14px;padding:22px;font-size:clamp(20px,3.6vw,28px);font-weight:700;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.ans{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.ans,.modes{grid-template-columns:1fr}}
+.a{display:flex;align-items:center;gap:12px;text-align:left;min-height:84px;font-size:clamp(17px,2.6vw,21px)}
+.a svg{flex:none;width:34px;height:34px;fill:#fff}
+.a.dim{opacity:.35}.a.ok{outline:5px solid var(--gold)}
+.k0{background:var(--c0)}.k1{background:var(--c1)}.k2{background:var(--c2)}.k3{background:var(--c3)}
+.fb{margin-top:16px;text-align:center}
+.fb h2{margin:4px 0;font-size:34px}
+.fb p{font-size:18px;margin:6px 0}
+.big{font-size:64px;font-weight:800;color:var(--gold);text-align:center;margin:6px 0}
+.rev{text-align:left;font-size:16px;margin:8px 0;padding:10px;background:#f1eefa;border-radius:10px}
+label{display:block;font-weight:700}table{width:100%;border-collapse:collapse;font-size:16px}th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #ddd}th{background:#f1eefa}td.n{font-weight:800}.lv{font-size:14px;text-transform:uppercase;letter-spacing:1px}
+</style></head><body><div id="app">
+
+<section id="s-start">
+<h1>Kuis Detektif Berita</h1>
+<p class="sub">Ciri teks berita, bahasa baku, dan struktur berita · Kelas XI</p>
+<div class="card">
+<label for="nm">Nama lengkap</label><input id="nm" maxlength="40" placeholder="Ketik namamu" autocomplete="off">
+<label for="ab">No. absen</label><input id="ab" maxlength="3" inputmode="numeric" placeholder="Contoh: 12" autocomplete="off">
+<label for="kl">Kelas</label><input id="kl" maxlength="12" placeholder="Contoh: XI-3" autocomplete="off">
+<p id="err" style="color:#c0102e;font-weight:700;margin:0 0 10px" hidden></p>
+<button class="btn m-all" id="go" style="width:100%">Mulai kuis (30 soal)</button>
+<p style="margin:14px 0 0;font-size:15px">Jawab cepat untuk poin lebih besar. Jawaban benar beruntun memberi bonus. Skor akhirmu otomatis dikirim ke guru untuk peringkat (pastikan internet aktif sampai selesai). Tombol A–D atau 1–4 pada keyboard juga bisa dipakai.</p>
+</div>
+</section>
+
+<section id="s-q" hidden>
+<div class="top"><span class="pill" id="pg"></span><span class="pill lv" id="lv"></span><span class="pill" id="sc"></span></div>
+<div class="bar"><div id="fill"></div></div>
+<div class="qbox" id="qt"></div>
+<div class="ans" id="ans"></div>
+<div class="fb card" id="fb" hidden>
+<h2 id="fh"></h2><p id="fp"></p><p id="fe"></p>
+<button class="btn m-all" id="nx" style="margin-top:10px">Lanjut</button></div>
+</section>
+
+<section id="s-end" hidden>
+<h1 id="et">Selesai!</h1>
+<div class="card"><div class="big" id="es"></div><p id="ed" style="text-align:center;font-size:19px;margin:0 0 12px"></p>
+<p id="sent" style="text-align:center;font-weight:700"></p><div id="bk" hidden style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0"><button class="btn m-m" id="cp">Salin hasil</button><button class="btn m-s" id="wa" hidden>Kirim lewat WhatsApp</button></div><div id="er"></div>
+<button class="btn m-all" id="again" style="width:100%;margin-top:14px">Main lagi</button></div>
+</section>
+</div>
+<script>
+/* PENGATURAN GURU: isi alamat Web App Apps Script (lihat petunjuk), dan nomor WhatsApp guru format 628xxxxxxxxxx (opsional). */
+const CONFIG={ENDPOINT:"https://script.google.com/macros/s/AKfycbwGcQIeTJwnyOVhHcWmLRdfNc9sZ9FlwSl8XjmCy1bDkfFTwDtXfJg0BJFcA57jwOWA-A/exec",WA_GURU:"6285606213109"};
+const D=[{"l": "m", "q": "Teks yang berisi kabar terkini tentang sebuah peristiwa yang terjadi di suatu tempat disebut teks ...", "o": ["Berita", "Puisi", "Cerpen", "Pantun"], "a": 0, "e": "Berita adalah teks berisi kabar terkini tentang peristiwa di suatu tempat."}, {"l": "m", "q": "Berita yang benar-benar terjadi dan dapat dibuktikan kebenarannya memiliki ciri ...", "o": ["Aktual", "Faktual", "Unik", "Kronologis"], "a": 1, "e": "Faktual berarti nyata, benar-benar terjadi, dan dapat dibuktikan."}, {"l": "m", "q": "Berita yang baru, terkini, dan sedang menjadi pembicaraan masyarakat bersifat ...", "o": ["Aktual", "Unik", "Kronologis", "Objektif"], "a": 0, "e": "Aktual berarti baru, terkini, dan sedang dibicarakan."}, {"l": "m", "q": "Bahasa yang digunakan dalam teks berita adalah bahasa ...", "o": ["Daerah", "Penuh kiasan", "Baku, sederhana, dan komunikatif", "Gaul dan santai"], "a": 2, "e": "Berita memakai bahasa baku sesuai ejaan, sederhana, dan mudah dipahami."}, {"l": "m", "q": "Penulisan kata yang baku adalah ...", "o": ["apotik", "afotek", "apotek", "apoteg"], "a": 2, "e": "Bentuk baku menurut KBBI: apotek."}, {"l": "m", "q": "Penulisan kata yang baku adalah ...", "o": ["aktivites", "aktifitas", "aktipitas", "aktivitas"], "a": 3, "e": "Bentuk baku menurut KBBI: aktivitas."}, {"l": "m", "q": "Penulisan kata yang baku adalah ...", "o": ["nasehat", "nasihat", "nasiat", "nasyihat"], "a": 1, "e": "Bentuk baku menurut KBBI: nasihat."}, {"l": "m", "q": "Bagian paling awal dari sebuah berita yang memuat inti informasi secara singkat disebut ...", "o": ["Ekor berita", "Penutup", "Tubuh berita", "Judul"], "a": 3, "e": "Judul adalah bagian pertama berita yang merangkum inti secara singkat."}, {"l": "m", "q": "Kalimat yang menggunakan bahasa baku adalah ...", "o": ["Dia gak masuk sekolah karena sakit.", "Dia nggak masuk sekolah karena sakit.", "Dia ga masuk sekolah karena sakit.", "Dia tidak masuk sekolah karena sakit."], "a": 3, "e": "Gak, nggak, dan ga adalah ragam tidak baku; bentuk bakunya tidak."}, {"l": "m", "q": "Langkah pertama untuk memahami isi berita adalah ...", "o": ["menulis ulang berita", "membaca atau menyimak berita dengan saksama", "mencatat pokok pikiran dengan adiksimba", "menyampaikan isi berita"], "a": 1, "e": "Urutan: menyimak, mencatat pokok pikiran, lalu menyampaikan isi berita."}, {"l": "s", "q": "Kalimat “Menurut saya inovasi ini luar biasa” jika dimasukkan ke dalam berita melanggar ciri ...", "o": ["objektif", "faktual", "aktual", "berpengaruh bagi masyarakat luas"], "a": 0, "e": "Pendapat pribadi pelapor melanggar sifat objektif."}, {"l": "s", "q": "Penulisan “Rabu (13/01/2026) di Jakarta Pusat” dalam berita menunjukkan ciri ...", "o": ["bahasa baku", "memuat waktu dan tempat kronologi", "objektif", "unik dan menarik"], "a": 1, "e": "Keterangan kapan dan di mana menunjukkan ciri waktu dan tempat kronologi."}, {"l": "s", "q": "Setiap portal berita memiliki editorial redaksi dan diksi yang khas. Hal ini berkaitan dengan ciri ...", "o": ["berpengaruh bagi masyarakat luas", "unik dan menarik", "faktual", "objektif"], "a": 1, "e": "Unik berarti tiap redaksi punya gaya sendiri; menarik berarti memancing rasa ingin tahu."}, {"l": "s", "q": "Berita tentang kegiatan pribadi yang tidak berdampak bagi publik kurang memenuhi ciri ...", "o": ["objektif", "aktual", "faktual", "berpengaruh bagi masyarakat luas"], "a": 3, "e": "Berita seharusnya berpengaruh bagi kepentingan orang banyak."}, {"l": "s", "q": "Kelompok kata yang semuanya baku adalah ...", "o": ["resiko, izin, analisa", "risiko, izin, analisis", "risiko, ijin, analisis", "resiko, ijin, analisa"], "a": 1, "e": "Bentuk baku: risiko, izin, analisis."}, {"l": "s", "q": "Kalimat yang menggunakan bahasa baku adalah ...", "o": ["Kami udah nyampe di lokasi.", "Warga membersihkan sungai secara bergotong royong.", "Banjir kemarin parah banget, rumah pada terendam.", "Petani pake alat itu buat ngecek tanah."], "a": 1, "e": "Pilihan lain memuat kata tidak baku (banget, pada, pake, buat, ngecek, udah, nyampe)."}, {"l": "s", "q": "Bagian berita yang memuat inti informasi berupa unsur 5W+1H disebut ...", "o": ["tubuh berita", "judul", "kepala berita (teras berita)", "ekor berita"], "a": 2, "e": "Teras berita menjawab apa, siapa, kapan, di mana, mengapa, dan bagaimana."}, {"l": "s", "q": "Bagian berita yang menjelaskan peristiwa secara lebih rinci disebut ...", "o": ["judul", "penutup", "kepala berita", "tubuh berita"], "a": 3, "e": "Tubuh berita memuat rincian dan perkembangan peristiwa."}, {"l": "s", "q": "Berita tentang banjir tahun lalu yang isinya benar tetap faktual, tetapi tidak lagi memenuhi ciri ...", "o": ["bahasa baku", "aktual", "faktual", "objektif"], "a": 1, "e": "Karena sudah lama, berita itu tidak lagi baru dan tidak sedang dibicarakan."}, {"l": "s", "q": "Kata tidak baku pada kalimat “Dokter itu membuka praktek di pusat kota” adalah ...", "o": ["membuka", "kota", "pusat", "praktek"], "a": 3, "e": "Bentuk baku: praktik."}, {"l": "h", "q": "Kalimat berikut yang mengandung opini pelapor sehingga tidak layak muncul dalam berita adalah ...", "o": ["Data dikirim ke aplikasi ponsel.", "Alat ini mengukur pH dan kelembapan tanah.", "Inovasi ini sungguh menakjubkan dan pasti mengubah dunia.", "SoilPIN diuji coba di Bandung dan Jakarta."], "a": 2, "e": "Kata sungguh menakjubkan dan pasti mengubah dunia adalah penilaian pribadi, bukan fakta."}, {"l": "h", "q": "Sebuah portal memuat berita “Harga beras naik drastis” tanpa menyebut tanggal, tempat, atau sumber. Ciri yang paling lemah pada berita itu adalah ...", "o": ["faktual serta memuat waktu dan tempat", "keringkasan kalimat", "penggunaan bahasa baku", "penggunaan huruf kapital"], "a": 0, "e": "Tanpa tanggal, tempat, dan sumber, kebenaran berita sulit dibuktikan."}, {"l": "h", "q": "Perbaikan yang tepat untuk kalimat “Pemerintah merubah kebijakan subsidi pupuk” adalah ...", "o": ["Pemerintah merobah kebijakan subsidi pupuk.", "Pemerintah mengobah kebijakan subsidi pupuk.", "Pemerintah mengubah kebijakan subsidi pupuk.", "Pemerintah merubah-rubah kebijakan subsidi pupuk."], "a": 2, "e": "Kata dasarnya ubah, sehingga bentuk baku: mengubah."}, {"l": "h", "q": "Kalimat yang berbahasa baku dan efektif adalah ...", "o": ["Petani mendapat bantuan daripada pemerintah.", "Alat itu sangat membantu para petani.", "Para petani-petani menggunakan alat itu.", "Alat itu bagi petani sangat amat membantu sekali."], "a": 1, "e": "Pilihan lain mengandung pemborosan kata dan salah pakai daripada."}, {"l": "h", "q": "Seorang siswa menulis berita yang diawali kronologi rinci dan baru menyebut inti peristiwa di akhir. Kesalahan utamanya terletak pada ...", "o": ["jumlah paragraf", "susunan bagian: inti 5W+1H seharusnya ada di kepala berita setelah judul", "penggunaan bahasa baku", "penulisan judul"], "a": 1, "e": "Berita menempatkan inti informasi lebih dahulu, lalu rincian pada tubuh berita."}, {"l": "h", "q": "Alasan utama pesan berantai “Besok sekolah diliburkan! Sebarkan!” tidak dapat disebut berita akurat adalah ...", "o": ["menggunakan tanda seru", "terlalu singkat", "tidak dapat dibuktikan kebenarannya dan tidak bersumber jelas", "tidak memiliki judul"], "a": 2, "e": "Berita harus faktual dan dapat diverifikasi, ditunjukkan antara lain oleh sumber yang jelas."}, {"l": "h", "q": "Kutipan “SoilPIN diuji coba di Bandung dan Jakarta sebelum tampil di Bangkok” paling tepat membuktikan ciri ...", "o": ["bahasa baku", "memuat waktu dan tempat kronologi", "unik dan menarik", "objektif"], "a": 1, "e": "Kutipan itu menunjukkan urutan peristiwa dan tempat kejadiannya."}, {"l": "h", "q": "Perbaikan yang tepat untuk kata bercetak tebal pada kalimat “Berita bohong dapat <b>mempengaruhi</b> opini publik” adalah ...", "o": ["mengpengaruhi", "memperngaruhi", "memphengaruhi", "memengaruhi"], "a": 3, "e": "Huruf p pada kata dasar pengaruh luluh jika diberi awalan meng-: memengaruhi."}, {"l": "h", "q": "Perhatikan berita fiktif berikut. “Pada Senin (26/10/2026), siswa SMA di Surabaya memenangkan lomba robotik tingkat provinsi. Kemenangan ini sangat membanggakan dan menurut saya pantas dicontoh semua orang.” Bagian yang melanggar ciri objektif adalah ...", "o": ["“Pada Senin (26/10/2026)”", "“siswa SMA di Surabaya”", "“menurut saya pantas dicontoh semua orang”", "“tingkat provinsi”"], "a": 2, "e": "Frasa menurut saya menandakan pendapat pribadi pelapor."}, {"l": "h", "q": "Seorang pelapor menulis: “Ane lihat banjir gede banget kemaren di kampung.” Penulisan ulang yang tetap menjaga ciri berita adalah ...", "o": ["Banjir gede banget kemarin di kampung.", "Banjir besar melanda kampung itu pada Minggu (25/10/2026).", "Ane lihat banjir besar di kampung sodara.", "Banjir yg gede bgt kemaren di kampung."], "a": 1, "e": "Pilihan benar baku, objektif, serta memuat waktu dan tempat."}];
+const LV={m:"Mudah",s:"Sedang",h:"Sulit"},TM={m:20,s:25,h:30};
+const SH=['<svg viewBox="0 0 32 32"><path d="M16 4 30 28H2z"/></svg>','<svg viewBox="0 0 32 32"><path d="M16 2 30 16 16 30 2 16z"/></svg>','<svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13"/></svg>','<svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24"/></svg>'];
+const $=id=>document.getElementById(id);
+let list,i,score,streak,right,lock,t0,T,tm,wrong,name;
+function show(id){["s-start","s-q","s-end"].forEach(x=>$(x).hidden=x!==id);window.scrollTo(0,0)}
+let ab,kl;
+$("go").onclick=()=>{
+ name=$("nm").value.trim();ab=$("ab").value.trim();kl=$("kl").value.trim().toUpperCase();
+ if(!name||!ab||!kl){$("err").textContent="Isi nama, no. absen, dan kelas terlebih dahulu.";$("err").hidden=false;return}
+ $("err").hidden=true;list=D.slice();i=0;score=0;streak=0;right=0;wrong=[];show("s-q");ask()};
+function ask(){
+ const q=list[i];lock=false;T=TM[q.l];
+ $("pg").textContent="Soal "+(i+1)+" / "+list.length;$("lv").textContent=LV[q.l];$("sc").textContent=score+" poin";
+ $("qt").innerHTML=q.q;$("fb").hidden=true;
+ const a=$("ans");a.innerHTML="";
+ q.o.forEach((t,k)=>{const b=document.createElement("button");b.className="btn a k"+k;b.innerHTML=SH[k];
+  const s=document.createElement("span");s.textContent=t;b.appendChild(s);b.onclick=()=>pick(k);a.appendChild(b)});
+ t0=performance.now();clearInterval(tm);
+ tm=setInterval(()=>{const r=1-(performance.now()-t0)/1000/T;$("fill").style.width=Math.max(r,0)*100+"%";if(r<=0)pick(-1)},100);
+}
+function pick(k){
+ if(lock)return;lock=true;clearInterval(tm);
+ const q=list[i],el=(performance.now()-t0)/1000,ok=k===q.a;let pts=0;
+ if(ok){streak++;right++;pts=Math.round(1000*(1-Math.min(el/T,1)/2))+(streak>=2?Math.min(streak-1,5)*100:0);score+=pts}
+ else{streak=0;wrong.push(q)}
+ [...$("ans").children].forEach((b,n)=>{b.disabled=true;if(n===q.a)b.classList.add("ok");else b.classList.add("dim")});
+ $("sc").textContent=score+" poin";
+ $("fh").textContent=ok?"Benar!":(k<0?"Waktu habis":"Belum tepat");
+ $("fp").textContent=ok?"+"+pts+" poin"+(streak>=2?" (beruntun "+streak+")":""):"Jawaban benar: "+"ABCD"[q.a]+". "+q.o[q.a];
+ $("fe").textContent=q.e;$("fb").hidden=false;
+ $("nx").textContent=i+1<list.length?"Soal berikutnya":"Lihat hasil";$("nx").focus();
+}
+$("nx").onclick=()=>{i++;i<list.length?ask():end()};
+function end(){
+ const p=Math.round(right/list.length*100);
+ $("et").textContent=p>=90?"Detektif Berita Sejati":p>=70?"Jurnalis Andal":p>=50?"Reporter Magang":"Terus Berlatih";
+ $("es").textContent=score;
+ $("ed").textContent=name+": "+right+" dari "+list.length+" soal benar ("+p+"%)";
+ $("er").innerHTML=wrong.length?"<b>Perlu dipelajari lagi:</b>":"<b>Semua jawabanmu benar!</b>";
+ wrong.forEach(q=>{const d=document.createElement("div");d.className="rev";
+  d.innerHTML=q.q;const s=document.createElement("div");s.style.marginTop="6px";s.textContent="Kunci: "+"ABCD"[q.a]+". "+q.o[q.a]+" — "+q.e;d.appendChild(s);$("er").appendChild(d)});
+ show("s-end");submit();
+}
+$("again").onclick=()=>show("s-start");
+document.addEventListener("keydown",e=>{
+ if($("s-q").hidden)return;const k="abcd".indexOf(e.key.toLowerCase());const n=["1","2","3","4"].indexOf(e.key);
+ const v=k>=0?k:n;if(v>=0&&!lock)pick(v);else if((e.key==="Enter")&&lock&&!$("fb").hidden)$("nx").click();
+});
+
+
+function hasil(){return "Hasil Kuis Detektif Berita\nNama: "+name+"\nAbsen: "+ab+"\nKelas: "+kl+"\nSkor: "+score+"\nBenar: "+right+"/"+list.length}
+function backup(){
+ $("bk").hidden=false;
+ $("cp").onclick=async()=>{try{await navigator.clipboard.writeText(hasil());$("cp").textContent="Tersalin"}catch(e){window.prompt("Salin hasil ini:",hasil())}};
+ if(CONFIG.WA_GURU){$("wa").hidden=false;$("wa").onclick=()=>window.open("https://wa.me/"+CONFIG.WA_GURU+"?text="+encodeURIComponent(hasil()),"_blank")}
+}
+async function submit(){
+ const st=$("sent");$("bk").hidden=true;
+ if(!CONFIG.ENDPOINT){st.textContent="Pengiriman otomatis belum diaktifkan oleh guru. Kirim hasilmu secara manual.";backup();return}
+ st.textContent="Mengirim skor ke guru...";
+ const rec={id:Date.now()+"-"+Math.random().toString(36).slice(2,8),nama:name,absen:ab,kelas:kl,skor:score,benar:right,total:list.length};
+ try{
+  const r=await fetch(CONFIG.ENDPOINT,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(rec)});
+  const j=await r.json();if(!j.ok)throw new Error("ditolak");
+  st.textContent="Skormu sudah terkirim ke guru."
+ }catch(e){
+  try{await fetch(CONFIG.ENDPOINT,{method:"POST",mode:"no-cors",body:JSON.stringify(rec)});st.textContent="Skor dikirim, tetapi penerimaan belum bisa dikonfirmasi. Simpan hasil di bawah sebagai cadangan.";backup()}
+  catch(e2){st.textContent="Skor gagal terkirim. Periksa internet, lalu kirim hasilmu secara manual.";backup()}
+ }
+}
+</script></body></html>
